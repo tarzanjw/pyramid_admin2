@@ -9,12 +9,18 @@ from cqlengine.models import Model as CQLEngineModel
 from cqlengine.exceptions import ValidationError
 from cqlengine.query import ModelQuerySet
 import cqlengine
-
+from cqlengine.columns import BaseContainerColumn
+from cqlengine import operators, statements
 
 def _cqlengine_admin_manager_factory(model):
     if inspect.isclass(model) and issubclass(model, CQLEngineModel):
         return CQLEngineManager(model)
     return None
+
+
+class CQLContainsOperator(operators.EqualsOperator):
+    symbol = 'CONTAINS'
+    cql_symbol = 'CONTAINS'
 
 
 class CQLEngineBrowseCriteria(admin_manager.BrowseCriteria):
@@ -109,9 +115,29 @@ class CQLEngineBrowseCriteria(admin_manager.BrowseCriteria):
         }
 
     @reify
+    def query(self):
+        cols = self.model._columns
+        query = self.model.objects.limit(self.items_per_page)
+        fc = 0
+        for aname, avalue in self.request.GET.items():
+            if aname not in cols:
+                continue
+            fc += 1
+            col = cols[aname]
+            if isinstance(col, BaseContainerColumn):
+                where = statements.WhereClause(aname,
+                                               CQLContainsOperator(), avalue)
+                query = query.filter(where)
+            else:
+                query = query.filter(**{aname: avalue})
+        if fc:
+            query = query.allow_filtering()
+        return query
+
+    @reify
     def objects(self):
         pages = self.pages.copy()
-        raw_query = self.model.objects.limit(self.items_per_page)
+        raw_query = self.query
         if not len(pages):
             return list(raw_query)
         page = pages.pop()
