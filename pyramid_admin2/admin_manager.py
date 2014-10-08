@@ -2,6 +2,10 @@ import inspect
 import itertools
 from pyramid.decorator import reify
 import six
+if six.PY2:
+    from urllib import urlencode
+else:
+    from urllib.parse import urlencode
 from . import helpers
 from .model import register_model
 from .helpers import cell_datatype
@@ -83,13 +87,16 @@ class BrowseCriteria(object):
     search_schema = ConfigurablePropertyDescriptor('search_schema')
     __default_search_schema__ = None
 
-    def __init__(self, manager):
+    def __init__(self, manager, request):
         """
         :param AdminManager manager: the manager
+        :param pyramid.request.Request request: the request that criteria is applied to
         :return:
         """
         self.manager = manager
-
+        self.request = request
+        self.model = manager.model
+        self.items_per_page = manager.list__items_per_page
 
     @property
     def objects_count(self):
@@ -98,6 +105,34 @@ class BrowseCriteria(object):
     @property
     def objects(self):
         raise NotImplementedError()
+
+    @property
+    def page_status(self):
+        return None
+
+    @property
+    def previous_page_url(self):
+        return self._generate_page_url(self._previous_page_query)
+
+    @property
+    def next_page_url(self):
+        return self._generate_page_url(self._next_page_query)
+
+    def _generate_page_url(self, extend_query_str):
+        if not extend_query_str:
+            return None
+        queries = self.request.GET.mixed()
+        queries.update(extend_query_str)
+        queries = urlencode(queries)
+        return self.request.relative_url('?' + queries)
+
+    @property
+    def _previous_page_query(self):
+        return None
+
+    @property
+    def _next_page_query(self):
+        return None
 
 
 class AdminManager(object):
@@ -130,7 +165,7 @@ class AdminManager(object):
     __default_admin_actions__ = ['list', 'create', 'update', 'detail', 'delete']
     __default_schema_cls__ = None
     __default_id_attr__ = 'id'
-    __default_list__items_per_page__ = 50
+    __default_list__items_per_page__ = 10
 
     @property
     def __default_slug__(self):
@@ -173,6 +208,12 @@ class AdminManager(object):
     def ObjectResource(self):
         from . import resources as _rsr
         return _rsr.object_resource_class(self.model)
+
+    def create_criteria(self, request):
+        """
+        :rtype: BrowseCriteria
+        """
+        return self.criteria_cls(self, request)
 
     def get_value_type(self, val):
         """ Get type of a value to display

@@ -122,7 +122,6 @@ class ActionConf(object):
                 return '{obj}@' + self.name
 
     def get_label(self, obj=None):
-        print(self.label)
         return self.label.format(
             mgr=admin_manager.get_manager(self.model),
             obj=obj,

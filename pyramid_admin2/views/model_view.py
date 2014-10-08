@@ -55,6 +55,13 @@ class ModelView(object):
         return self.context.model
 
     @property
+    def criteria(self):
+        """
+        :rtype: pyramid_admin2.admin_manager.BrowseCriteria
+        """
+        return self.admin_mgr.create_criteria(self.request)
+
+    @property
     def is_current_context_object(self):
         """
         :rtype : bool
@@ -153,17 +160,10 @@ class ModelView(object):
         return "%s?%s" % (self.request.path, qs)
 
     def action_list(self):
-        cur_page = int(self.request.params.get("_page", 1))
-        filters = {k: v for k, v in self.request.GET.items() if not k.startswith('_')}
-        objects = self.admin_mgr.fetch_objects(page=cur_page, filters=filters)
-        objects = list(objects)
-        objects_count = self.admin_mgr.count_objects(filters)
-
         return {
-            'objects': objects,
-            'objects_count': objects_count,
             'view': self,
             'admin_mgr': self.admin_mgr,
+            'criteria': self.criteria,
         }
 
     def action_create(self):

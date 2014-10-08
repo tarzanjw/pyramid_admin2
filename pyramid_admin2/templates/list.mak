@@ -7,6 +7,10 @@
 
 <%block name="page_title">${admin_mgr.display_name} list</%block>
 
+<div class="pull-right">
+    ${panel('pyramid_admin2.paging', view.criteria)}
+</div>
+
 <%block name="object_list">
 <table class="table table-striped table-bordered table-condensed table-objects">
     <thead>
@@ -18,7 +22,7 @@
         </tr>
     </thead>
     <tbody>
-    % for e in objects:
+    % for e in criteria.objects:
         <tr>
             <td class="col-type-commands">
                 % for cmd in view.object_actions(e):
