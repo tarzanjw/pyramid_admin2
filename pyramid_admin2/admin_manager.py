@@ -127,8 +127,7 @@ class AdminManager(object):
     criteria_cls = ConfigurablePropertyDescriptor('criteria_cls')
 
     __default_criteria_cls__ = BrowseCriteria
-    # __default_admin_actions__ = ['list', 'create', 'update', 'detail', 'delete']
-    __default_admin_actions__ = ['list', 'create', 'detail', ]
+    __default_admin_actions__ = ['list', 'create', 'update', 'detail', 'delete']
     __default_schema_cls__ = None
     __default_id_attr__ = 'id'
     __default_list__items_per_page__ = 50

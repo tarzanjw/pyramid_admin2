@@ -39,7 +39,10 @@ class CQLEngineManager(admin_manager.AdminManager):
 
     def get_object(self, key):
         id_filters = self.get_id_filters(key)
-        return self.model.get(**id_filters)
+        try:
+            return self.model.get(**id_filters)
+        except (ValidationError, self.model.DoesNotExist):
+            return None
 
     def create(self, data):
         obj = self.model.create(**data)

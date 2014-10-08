@@ -24,17 +24,17 @@ def _colander_null_to_none(data):
 
 
 class InvalidSchemaClassError(RuntimeError):
-    def __init__(self, backend_mgr):
+    def __init__(self, admin_mgr):
         """
-        :type backend_mgr: pyramid_backend.backend_manager.Manager
+        :type admin_mgr: pyramid_admin2.admin_manager.AdminManager
         """
-        self.backend_mgr = backend_mgr
+        self.admin_mgr = admin_mgr
         super(InvalidSchemaClassError, self).__init__('%s is not class for %s\'s schema'
-                                                      % (self.backend_mgr.schema_cls,
-                                                         self.backend_mgr.Model))
+                                                      % (self.admin_mgr.schema_cls,
+                                                         self.admin_mgr.model))
 
 
-@view_config(context=InvalidSchemaClassError, renderer='pyramid_backend:templates/no_schema.mak')
+@view_config(context=InvalidSchemaClassError, renderer='pyramid_admin2:templates/no_schema.mak')
 def on_invalid_schema_class(context, request):
     return {
         'error': context,
@@ -64,7 +64,7 @@ class ModelView(object):
     @property
     def admin_mgr(self):
         """
-        :rtype : pyramid_backend.backend_manager.Manager
+        :rtype : pyramid_admin2.admin_manager.AdminManager
         """
         return admin_manager.get_manager(self.model)
 
@@ -130,16 +130,14 @@ class ModelView(object):
         else:
             cmd_name = r.view_name
 
-        if cmd_name in self.admin_mgr.actions:
-            ca = self.admin_mgr.actions[cmd_name]
-            if self.is_current_context_object:
-                _label = ca['_label'] if '_label' in ca else ('%s@' + cmd_name)
-                _label = _label % cxt.object
-            else:
-                _label = ca['_label'] if '_label' in ca else \
-                    (self.admin_mgr.display_name + '@' + cmd_name)
-        else:
-            _label = '@' + cmd_name
+        _label = '@' + cmd_name
+        for aconf in self.admin_mgr.actions:
+            if cmd_name == aconf.name:
+                if self.is_current_context_object:
+                    _label = aconf.get_label(cxt.object)
+                else:
+                    _label = aconf.get_label()
+                break
 
         return [{
             'url': r.resource_url(c),
@@ -187,6 +185,7 @@ class ModelView(object):
         return {
             'view': self,
             "form": form,
+            'admin_mgr': self.admin_mgr,
         }
 
     def action_update(self):
@@ -214,6 +213,7 @@ class ModelView(object):
             'view': self,
             'obj': obj,
             "form": form,
+            'admin_mgr': self.admin_mgr,
         }
 
     def action_detail(self):

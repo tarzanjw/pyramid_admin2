@@ -57,7 +57,6 @@ td.datatype-datetime {text-align: right}
         val = '<span class="label label-success">True</span>' if raw_val else \
             '<span class="label label-default">False</span>'
     elif model_hepler.is_registered_model(raw_val):
-        print(raw_val)
         val = '<a href="%s">%s</a>' % (_rsr.object_url(request, raw_val), val)
     %>
     ${val|n}

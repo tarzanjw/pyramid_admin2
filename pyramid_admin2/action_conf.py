@@ -36,27 +36,26 @@ _DEFAULT_ACTION_CONF = {
         '_icon': 'eye-open',
         '_label': six.text_type('View {obj} detail'),
     },
-    # 'update': {
-    #     'route_name': 'admin_site',
-    #     'context': self.ObjectResource,
-    #     'name': 'update',
-    #     'attr': 'action_update',
-    #     'renderer': 'pyramid_backend:templates/update.mak',
-    #     'permission': 'update',
-    #     '_icon': 'pencil',
-    #     '_label': u'Update %s',
-    # },
-    # 'delete': {
-    #     'route_name': 'admin_site',
-    #     'context': self.ObjectResource,
-    #     'name': 'delete',
-    #     'attr': 'action_delete',
-    #     'renderer': 'pyramid_backend:templates/update.mak',
-    #     'permission': 'delete',
-    #     '_icon': 'remove',
-    #     '_label': u'Delete %s',
-    #     '_onclick': u"return confirm('Do you want to delete %s?');",
-    # },
+    'update': {
+        'route_name': ROOT_ROUTE_NAME,
+        'context': _rsr.ObjectResource,
+        'name': 'update',
+        'attr': 'action_update',
+        'renderer': 'pyramid_admin2:templates/update.mak',
+        'permission': 'update',
+        '_icon': 'pencil',
+        '_label': six.text_type('Update {obj}'),
+    },
+    'delete': {
+        'route_name': ROOT_ROUTE_NAME,
+        'context': _rsr.ObjectResource,
+        'name': 'delete',
+        'attr': 'action_delete',
+        'permission': 'delete',
+        '_icon': 'remove',
+        '_label': six.text_type('Delete {obj}'),
+        '_onclick': six.text_type("return confirm('Do you want to delete {obj}?');"),
+    },
 }
 
 class ActionConf(object):
@@ -123,6 +122,7 @@ class ActionConf(object):
                 return '{obj}@' + self.name
 
     def get_label(self, obj=None):
+        print(self.label)
         return self.label.format(
             mgr=admin_manager.get_manager(self.model),
             obj=obj,
