@@ -34,9 +34,9 @@ class CQLEngineBrowseCriteria(admin_manager.BrowseCriteria):
         :rtype: str
 
         >>> from datetime import datetime
-        >>> pages = [{'part':1234, 'id': datetime(2014, 2, 14)}, {'part': 1234, 'id': datetime(2014, 2, 17)}]
-        >>> CQLEngineBrowseCriteria.serialize_pages(pages)
-        'gANdcQAofXEBKFgEAAAAcGFydHECTdIEWAIAAABpZHEDY2RhdGV0aW1lCmRhdGV0aW1lCnEEQwoH3gIOAAAAAAAAcQWFcQZScQd1fXEIKGgCTdIEaANoBEMKB94CEQAAAAAAAHEJhXEKUnELdWUu'
+        >>> pages = [[('part', 1234), ('id', datetime(2014, 2, 14)), [('part', 1234), ('id', datetime(2014, 2, 17))]]]
+        >>> str(CQLEngineBrowseCriteria.serialize_pages(pages))
+        'gANdcQBdcQEoWAQAAABwYXJ0cQJN0gSGcQNYAgAAAGlkcQRjZGF0ZXRpbWUKZGF0ZXRpbWUKcQVDCgfeAg4AAAAAAABxBoVxB1JxCIZxCV1xCihoAk3SBIZxC2gEaAVDCgfeAhEAAAAAAABxDIVxDVJxDoZxD2VlYS4='
         """
         pages = pickle.dumps(pages)
         pages = base64.b64encode(pages)
@@ -48,9 +48,9 @@ class CQLEngineBrowseCriteria(admin_manager.BrowseCriteria):
         :param string pages: the pages as serialized string
         :return: pages as list
         :rtype: list
-        >>> s = 'gANdcQAofXEBKFgEAAAAcGFydHECTdIEWAIAAABpZHEDY2RhdGV0aW1lCmRhdGV0aW1lCnEEQwoH3gIOAAAAAAAAcQWFcQZScQd1fXEIKGgCTdIEaANoBEMKB94CEQAAAAAAAHEJhXEKUnELdWUu'
+        >>> s = 'gANdcQBdcQEoWAQAAABwYXJ0cQJN0gSGcQNYAgAAAGlkcQRjZGF0ZXRpbWUKZGF0ZXRpbWUKcQVDCgfeAg4AAAAAAABxBoVxB1JxCIZxCV1xCihoAk3SBIZxC2gEaAVDCgfeAhEAAAAAAABxDIVxDVJxDoZxD2VlYS4='
         >>> CQLEngineBrowseCriteria.deserialize_pages(s)
-        [{'part': 1234, 'id': datetime.datetime(2014, 2, 14, 0, 0)}, {'part': 1234, 'id': datetime.datetime(2014, 2, 17, 0, 0)}]
+        [[('part', 1234), ('id', datetime.datetime(2014, 2, 14, 0, 0)), [('part', 1234), ('id', datetime.datetime(2014, 2, 17, 0, 0))]]]
         """
         pages = base64.b64decode(pages)
         pages = pickle.loads(pages)
