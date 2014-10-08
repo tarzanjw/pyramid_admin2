@@ -160,10 +160,21 @@ class ModelView(object):
         return "%s?%s" % (self.request.path, qs)
 
     def action_list(self):
+        search_schema_cls = self.admin_mgr.search_schema_cls
+        if search_schema_cls is None:
+            search_form = None
+        else:
+            search_schema = search_schema_cls().bind()
+            search_form = deform.Form(search_schema,
+                method='GET',
+                appstruct=self.request.GET.mixed(),
+                buttons=(deform.Button(title='Search'), )
+            )
         return {
             'view': self,
             'admin_mgr': self.admin_mgr,
             'criteria': self.criteria,
+            'search_form': search_form,
         }
 
     def action_create(self):

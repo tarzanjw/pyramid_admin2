@@ -120,7 +120,7 @@ class CQLEngineBrowseCriteria(admin_manager.BrowseCriteria):
         query = self.model.objects.limit(self.items_per_page)
         fc = 0
         for aname, avalue in self.request.GET.items():
-            if aname not in cols:
+            if (aname not in cols) or not avalue:
                 continue
             fc += 1
             col = cols[aname]
@@ -133,6 +133,16 @@ class CQLEngineBrowseCriteria(admin_manager.BrowseCriteria):
         if fc:
             query = query.allow_filtering()
         return query
+
+    @reify
+    def objects_count(self):
+        limit = 10*self.items_per_page
+        query = self.query.limit(limit)
+        c = query.count()
+        if c < limit:
+            return c
+        else:
+            return 'more than %d' % c
 
     @reify
     def objects(self):

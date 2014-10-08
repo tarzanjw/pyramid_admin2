@@ -147,6 +147,8 @@ class AdminManager(object):
         ConfigurablePropertyDescriptor('display_name')
     schema_cls = \
         ConfigurablePropertyDescriptor('schema_cls')
+    search_schema_cls = \
+        ConfigurablePropertyDescriptor('search_schema_cls')
     id_attr = \
         ForceToListConfigurablePropertyDescriptor('id_attr')
     column_names = \
@@ -164,8 +166,9 @@ class AdminManager(object):
     __default_criteria_cls__ = BrowseCriteria
     __default_admin_actions__ = ['list', 'create', 'update', 'detail', 'delete']
     __default_schema_cls__ = None
+    __default_search_schema_cls__ = None
     __default_id_attr__ = 'id'
-    __default_list__items_per_page__ = 10
+    __default_list__items_per_page__ = 20
 
     @property
     def __default_slug__(self):

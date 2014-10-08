@@ -7,6 +7,28 @@
 
 <%block name="page_title">${admin_mgr.display_name} list</%block>
 
+% if search_form:
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion"
+                       href="#collapseOne">
+                        Search
+                    </a>
+                </h4>
+            </div>
+
+            <div id="collapseOne" class="panel-collapse ${'in' if any([f.cstruct for f in search_form]) else 'collapse'}">
+                <div class="panel-body">
+                    ${search_form.render()|n}
+                </div>
+            </div>
+        </div>
+    </div>
+% endif
+
+
 <div class="pull-right">
     ${panel('pyramid_admin2.paging', view.criteria)}
 </div>
