@@ -44,3 +44,7 @@
     </tbody>
 </table>
 </%block>
+
+<div class="pull-right">
+    ${panel('pyramid_admin2.paging', view.criteria)}
+</div>

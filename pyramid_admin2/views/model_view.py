@@ -133,7 +133,7 @@ class ModelView(object):
                 cmd_name = 'detail'
             else:
                 cmd_name = 'list'
-            cxts = cxts[:-1]
+            # cxts = cxts[:-1]
         else:
             cmd_name = r.view_name
 
