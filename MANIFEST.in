@@ -1,0 +1,2 @@
+include *.txt *.ini *.cfg *.rst, *.md
+recursive-include pyramid_admin2 *.py *.mak *.mako *.txt

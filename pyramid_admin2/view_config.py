@@ -34,9 +34,6 @@ def _register_action(config, view, aconf):
         view = ModelView
     mgr = get_manager(aconf.model)
     mgr.actions.append(aconf)
-    from pprint import pprint
-    print(view)
-    pprint(aconf.view_conf)
     config.add_view(view, **aconf.view_conf)
 
 
