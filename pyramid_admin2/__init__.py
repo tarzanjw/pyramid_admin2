@@ -5,6 +5,7 @@ import re
 ADMIN_SITE_PATH = None
 ROOT_ROUTE_NAME = 'pyramid_admin'
 
+from . import admin_manager
 from .admin_manager import get_manager
 from . import view_config
 
@@ -47,6 +48,9 @@ def includeme(config):
     config.add_route(ROOT_ROUTE_NAME, route_pattern, factory=_rsr.AdminSite)
     config.add_directive('pa_register_model_view', view_config._register_model_view)
     config.add_directive('pa_register_object_action', view_config._register_object_action)
+
+    admin_manager.ID_SEPARATOR = settings.get('pyramid_admin.id_seprator',
+                                              admin_manager.ID_SEPARATOR)
 
     # register models
     model_paths = settings.get('pyramid_admin.models', '')

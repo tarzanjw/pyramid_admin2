@@ -13,6 +13,8 @@ from .helpers import cell_datatype
 
 __author__ = 'tarzan'
 
+ID_SEPARATOR = ','
+
 
 class AttrDisplayConf(object):
     """ This class is used to normalize a configuration for attribute display
@@ -261,14 +263,14 @@ class AdminManager(object):
 
     def get_id_filters(self, id_value):
         id_part_count = len(self.id_attr)
-        vals = str(id_value).split('-', id_part_count)
+        vals = str(id_value).split(ID_SEPARATOR, id_part_count)
         return dict(zip(self.id_attr, vals))
 
     def get_object(self, key):
         raise NotImplementedError()
 
     def object_id(self, obj):
-        return six.text_type('-').join([six.text_type(getattr(obj, attr_name))
+        return six.text_type(ID_SEPARATOR).join([six.text_type(getattr(obj, attr_name))
                                         for attr_name in self.id_attr])
 
 
