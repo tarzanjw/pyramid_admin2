@@ -27,6 +27,8 @@ def cell_datatype(val):
         return 'none'
     if isinstance(val, (list, tuple, set)):
         return 'list'
+    if isinstance(val, dict):
+        return 'dict'
     if isinstance(val, bool):
         return 'bool'
     if isinstance(val, six.integer_types + (float, )):

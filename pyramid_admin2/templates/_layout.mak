@@ -1,6 +1,8 @@
 <%!
     import six
+    import pprint
     import markupsafe
+    from datetime import datetime
     from pyramid_admin2.helpers import cell_datatype
     from pyramid_admin2 import model as model_hepler, resources as _rsr
     def get_layout_file(context):
@@ -58,6 +60,10 @@ td.datatype-datetime {text-align: right}
             '<span class="label label-default">False</span>'
     elif model_hepler.is_registered_model(raw_val):
         val = '<a href="%s">%s</a>' % (_rsr.object_url(request, raw_val), val)
+    elif val_type == 'dict':
+        val = pprint.pformat(raw_val)
+        val = six.text_type(markupsafe.escape(val))
+        val = '<pre>%s</pre>' % val
     %>
     ${val|n}
 % endif
