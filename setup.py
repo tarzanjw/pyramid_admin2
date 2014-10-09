@@ -29,6 +29,5 @@ setup(name='pyramid_admin2',
       packages=['pyramid_admin2', ],
       include_package_data=True,
       zip_safe=False,
-      test_suite='notification',
       install_requires=requires,
       )
