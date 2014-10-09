@@ -109,7 +109,9 @@ class ActionConf(object):
 
     @property
     def view_conf(self):
-        return {k: v for k, v in self.conf.items() if not k.startswith('_')}
+        conf = {k: v for k, v in self.conf.items() if not k.startswith('_')}
+        conf['route_name'] = ROOT_ROUTE_NAME
+        return conf
 
     @property
     def label(self):

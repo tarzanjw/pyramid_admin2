@@ -45,9 +45,8 @@ def includeme(config):
     _rsr.AdminSite.__name__ = ADMIN_SITE_PATH
     route_pattern = ADMIN_SITE_PATH + '*traverse'
     config.add_route(ROOT_ROUTE_NAME, route_pattern, factory=_rsr.AdminSite)
-    config.add_directive('register_model_view', view_config.register_model_view)
-    # config.add_directive('add_model_action', views.add_model_action)
-    # config.add_directive('add_object_action', views.add_object_action)
+    config.add_directive('pa_register_model_view', view_config._register_model_view)
+    config.add_directive('pa_register_object_action', view_config._register_object_action)
 
     # register models
     model_paths = settings.get('pyramid_admin.models', '')
@@ -59,6 +58,6 @@ def includeme(config):
         else:
             actions = None
         model = _lookup_object(path)
-        config.register_model_view(model, actions=actions)
+        config.pa_register_model_view(model, actions=actions)
 
     config.scan(__name__)
