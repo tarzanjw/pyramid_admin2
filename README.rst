@@ -1,6 +1,11 @@
 Change logs
 ===========
 
+0.3
+---
+
+  * Fix attribute display config mirror bug, Issue #1
+
 0.2
 ---
 
