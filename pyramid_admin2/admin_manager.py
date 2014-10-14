@@ -81,7 +81,7 @@ class DisplayConfPropertyDescriptor(ConfigurablePropertyDescriptor):
         for conf in val:
             if not isinstance(conf, (list, tuple)):
                 conf = [conf, ]
-                value.append(AttrDisplayConf(*conf))
+            value.append(AttrDisplayConf(*conf))
         return value
 
 
